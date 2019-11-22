@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es6",
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "*": ["node_modules/*"],
+      "config/*": ["config/*"],
+      "controllers/*": ["src/controllers/*"],
+      "models/*": ["src/models/*"],
+      "services/*": ["src/services/*"]
+    }
+  },
+  "include": ["./src/*", "./config"],
+  "exclude": ["node_modules"]
+}
