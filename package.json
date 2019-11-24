@@ -9,7 +9,7 @@
     "knex": "knex",
     "migrate": "knex migrate:latest",
     "seed": "knex seed:run",
-    "lint": "npx prettier --write \"src/**/*\""
+    "lint": "npx prettier --write 'src/{controllers,models,services}/**/*.{ts,js,scss}'"
   },
   "nodemonConfig": {
     "ignore": [
