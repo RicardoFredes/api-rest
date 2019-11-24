@@ -1,17 +1,17 @@
 import Database from 'services/Database'
 
 export default class Model {
-  db: any
+  private db: any
 
   constructor(table: string) {
     this.db = Database(table)
   }
 
-  all() {
+  public all() {
     return this.db.select()
   }
 
-  find(id: number) {
+  public find(id: number) {
     return this.db
       .first()
       .where({ id })
@@ -20,7 +20,7 @@ export default class Model {
       )
   }
 
-  findBy(column: string, value: any) {
+  public findBy(column: string, value: any) {
     return this.db
       .first()
       .where({ [column]: value })
@@ -29,15 +29,15 @@ export default class Model {
       )
   }
 
-  create(data: object) {
+  public create(data: object) {
     return this.db.insert(data)
   }
 
-  update(data: object, id: number) {
+  public update(data: object, id: number) {
     return this.db.update(data).where({ id })
   }
 
-  delete(id: number) {
+  public delete(id: number) {
     return this.db
       .where({ id })
       .delete()
