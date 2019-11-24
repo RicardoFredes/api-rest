@@ -1,4 +1,4 @@
-import { Router as ExpressRouter } from "express"
+import { Router as ExpressRouter } from 'express'
 
 interface RouteType {
   method: string
@@ -44,7 +44,10 @@ export default class Router {
   _mount() {
     this.routes.forEach(({ method, route, controllerMethod }) => {
       // @ts-ignore
-      this.router[method](route, useController(this.Controllers, controllerMethod))
+      this.router[method](
+        route,
+        useController(this.Controllers, controllerMethod)
+      )
     })
   }
 
@@ -52,7 +55,6 @@ export default class Router {
     this._mount()
     return this.router
   }
-
 }
 
 function useController(Controllers: object, controllerMethod: string) {
