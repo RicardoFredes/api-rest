@@ -1,12 +1,12 @@
 import express from 'express'
 import routes from './routes'
-const app = express();
+const app = express()
 
-app.use(express.json());
+app.use(express.json())
 
-app.use("/api", routes);
-app.get("/", function(_, res) {
-  res.send("Hello world!");
-});
+app.use('/api', routes)
+app.get('/', function(_, res) {
+  res.send('Hello world!')
+})
 
-export default app;
+export default app

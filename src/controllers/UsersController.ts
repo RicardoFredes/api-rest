@@ -6,4 +6,3 @@ export default class UsersController extends Controller {
     super(Users)
   }
 }
-

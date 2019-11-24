@@ -1,5 +1,6 @@
+// tslint:disable-next-line: no-var-requires
+const config = require('../../knexfile')
 import knex from 'knex'
-import config from 'config/knexfile'
 
 const Database = knex(config)
 

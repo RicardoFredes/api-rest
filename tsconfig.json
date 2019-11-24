@@ -11,12 +11,13 @@
     "baseUrl": ".",
     "paths": {
       "*": ["node_modules/*"],
-      "config/*": ["config/*"],
+      "config/*": ["src/config/*"],
       "controllers/*": ["src/controllers/*"],
+      "db/*": ["src/db/*"],
       "models/*": ["src/models/*"],
       "services/*": ["src/services/*"]
     }
   },
-  "include": ["./src/*", "./config"],
+  "include": ["./src/*"],
   "exclude": ["node_modules"]
 }
