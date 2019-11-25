@@ -59,7 +59,7 @@ export default class Router {
         // @ts-ignore
         this.router[method](
           route,
-          useControllerAction(Controller, action)
+          useControllerAction(new Controller(), action)
         )
       }
     })

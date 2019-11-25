@@ -1,56 +1,24 @@
-import Database from 'services/Database'
+import ObjectionModel from 'services/ObjectionModel'
 
-export default class Model {
-  private table: string
-
-  constructor(table: string) {
-    this.table = table
+export default class Model extends ObjectionModel {
+  public static all() {
+    return this.query()
   }
 
-  public all() {
-    return this.db.select()
+  public static find(id: number) {
+    return this.query().findById(id)
   }
 
-  public find(id: number) {
-    return this.db
-      .first()
-      .where({ id })
-      .then((data: any) =>
-        data ? data : Promise.reject(new Error('Content Not Found'))
-      )
+  public static create(data: object) {
+    return this.query().insert(data)
   }
 
-  public findBy(column: string, value: any) {
-    return this.db
-      .first()
-      .where({ [column]: value })
-      .then((data: any) =>
-        data ? data : Promise.reject(new Error('Content Not Found'))
-      )
+  public static update(id: number, data: object) {
+    return this.query().findById(id).patch(data)
   }
 
-  public create(data: object) {
-    return this.insertGetId(data)
+  public static delete(id: number) {
+    return this.query().deleteById(id)
   }
 
-  public update(id: number, data: object) {
-    return this.db.where({ id }).update(data)
-  }
-
-  public delete(id: number) {
-    return this.db
-      .where({ id })
-      .delete()
-      .then(() => ({ id }))
-  }
-
-  private async insertGetId(data: object) {
-    return Database(this.table)
-      .insert(data)
-      .then((ids: Array<number>) => ({ id: ids[0] }))
-  }
-
-  private get db(): any {
-    return Database(this.table)
-  }
 }
