@@ -33,8 +33,16 @@ export default class Router {
     this.add('put', route, controllerMethod)
   }
 
-  public destroy(route: string, controllerMethod: string) {
+  public delete(route: string, controllerMethod: string) {
     this.add('delete', route, controllerMethod)
+  }
+
+  public resources(route: string, controllerName: string) {
+    this.get(route, `${controllerName}.index`)
+    this.get(`${route}/:id`, `${controllerName}.show`)
+    this.post(route, `${controllerName}.create`)
+    this.update(`${route}/:id`, `${controllerName}.update`)
+    this.delete(`${route}/:id`, `${controllerName}.delete`)
   }
 
   public listen() {
@@ -44,20 +52,24 @@ export default class Router {
 
   private _mount() {
     this.routes.forEach(({ method, route, controllerMethod }) => {
+      const [name, action] = controllerMethod.split('.')
       // @ts-ignore
-      this.router[method](
-        route,
-        useController(this.Controllers, controllerMethod)
-      )
+      const Controller = this.Controllers[name]
+      if (Controller.permits.includes(action)) {
+        // @ts-ignore
+        this.router[method](
+          route,
+          useControllerAction(Controller, action)
+        )
+      }
     })
   }
+
 }
 
-function useController(Controllers: object, controllerMethod: string) {
-  const [name, method] = controllerMethod.split('.')
+function useControllerAction(Controller: any, controllerAction: string) {
   return (...args: any) => {
     // @ts-ignore
-    const Controller = Controllers[name]
-    return new Controller()[method](...args)
+    return Controller[controllerAction](...args)
   }
 }

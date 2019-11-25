@@ -1,10 +1,10 @@
 import Database from 'services/Database'
 
 export default class Model {
-  private db: any
+  private table: string
 
   constructor(table: string) {
-    this.db = Database(table)
+    this.table = table
   }
 
   public all() {
@@ -30,11 +30,11 @@ export default class Model {
   }
 
   public create(data: object) {
-    return this.db.insert(data)
+    return this.insertGetId(data)
   }
 
-  public update(data: object, id: number) {
-    return this.db.update(data).where({ id })
+  public update(id: number, data: object) {
+    return this.db.where({ id }).update(data)
   }
 
   public delete(id: number) {
@@ -42,5 +42,15 @@ export default class Model {
       .where({ id })
       .delete()
       .then(() => ({ id }))
+  }
+
+  private async insertGetId(data: object) {
+    return Database(this.table)
+      .insert(data)
+      .then((ids: Array<number>) => ({ id: ids[0] }))
+  }
+
+  private get db(): any {
+    return Database(this.table)
   }
 }
