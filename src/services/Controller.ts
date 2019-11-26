@@ -70,8 +70,7 @@ export default class Controller {
 
   protected responseDefault(res: Response) {
     return (result: any) => {
-      console.log(typeof res.json)
-      if (!result) return Promise.reject()
+      if (!result) this.responseNotFound(res)()
       return res.json(result)
     }
   }
