@@ -64,7 +64,6 @@ export default class Router {
       }
     })
   }
-
 }
 
 function useControllerAction(Controller: any, controllerAction: string) {

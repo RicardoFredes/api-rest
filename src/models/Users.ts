@@ -11,10 +11,10 @@ export default class Users extends Model {
       required: ['name', 'email', 'password'],
       properties: {
         id: { type: 'integer' },
-        name: { type: 'string', minLength: 1, maxLength: 50 },
-        password: { type: 'string', minLength: 1, maxLength: 16 },
+        name: { type: 'string', minLength: 3, maxLength: 50 },
+        password: { type: 'string', minLength: 6, maxLength: 255 },
         thumbnail: { type: 'string' },
-      }
+      },
     }
   }
 }

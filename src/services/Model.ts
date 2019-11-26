@@ -14,11 +14,10 @@ export default class Model extends ObjectionModel {
   }
 
   public static update(id: number, data: object) {
-    return this.query().findById(id).patch(data)
+    return this.query().patchAndFetchById(id, data)
   }
 
   public static delete(id: number) {
     return this.query().deleteById(id)
   }
-
 }
