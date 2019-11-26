@@ -17,6 +17,10 @@ export default class Model extends ObjectionModel {
     return this.db.findById(id).columns(this.only)
   }
 
+  public static async findOne(query: object): Promise<any> {
+    return this.db.where(query).first().columns(this.only)
+  }
+
   public static async create(data: object): Promise<any> {
     return this.db.insert(data).then((result: any) => this.find(result.id))
   }

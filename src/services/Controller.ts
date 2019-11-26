@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 
 export default class Controller {
-  private Model: any
+  protected Model: any
 
   constructor(Model: any) {
     this.Model = Model
@@ -26,7 +26,7 @@ export default class Controller {
     const id = req.params.id
     return this.Model.find(id)
       .then(this.useMiddleware('show'))
-      .then(this.responseSuccess(res))
+      .then(this.responseDefault(res))
       .catch(this.responseNotFound(res))
   }
 
@@ -35,7 +35,7 @@ export default class Controller {
     const data = req.body
     return this.Model.update(id, data)
       .then(this.useMiddleware('update'))
-      .then(this.responseSuccess(res))
+      .then(this.responseDefault(res))
       .catch(this.responseNotValid(res))
   }
 
@@ -43,7 +43,7 @@ export default class Controller {
     const data = req.body
     return await this.Model.create(data)
       .then(this.useMiddleware('create'))
-      .then(this.responseSuccess(res))
+      .then(this.responseDefault(res))
       .catch(this.responseNotValid(res))
   }
 
@@ -58,7 +58,7 @@ export default class Controller {
     return []
   }
 
-  private useMiddleware(action: string) {
+  protected useMiddleware(action: string) {
     const middleware = this.middlewares.find(
       (item: { action: string }) => item.action === action
     )
@@ -68,22 +68,26 @@ export default class Controller {
     }
   }
 
-  private responseSuccess(res: Response) {
-    return (result: any) => res.json(result)
-  }
-
-  private responseMessage(res: Response, message: string) {
-    return () => res.json({ message })
-  }
-
-  private responseNotFound(res: Response) {
-    return () => {
-      res.status(404)
-      return res.json({ message: 'Not Found ' })
+  protected responseDefault(res: Response) {
+    return (result: any) => {
+      console.log(typeof res.json)
+      if (!result) return Promise.reject()
+      return res.json(result)
     }
   }
 
-  private responseNotValid(res: Response) {
+  protected responseMessage(res: Response, message: string) {
+    return () => res.json({ message })
+  }
+
+  protected responseNotFound(res: Response) {
+    return () => {
+      res.status(404)
+      return res.json({ message: 'Not Found' })
+    }
+  }
+
+  protected responseNotValid(res: Response) {
     return (message: object) => {
       res.status(422)
       const error = { ...message, statusCode: 422 }
