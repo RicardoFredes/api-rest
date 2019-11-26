@@ -23,12 +23,12 @@ export default class UsersController extends Controller {
     ]
   }
 
-  private middlewareAll = (response: object[]) => response.map(this.middlewareOne)
+  private middlewareAll = (response: object[]) =>
+    response.map(this.middlewareOne)
 
   private middlewareOne = (data: any) => ({
     name: data.name,
     email: data.email,
-    thumbnail: data.thumbnail || null
+    thumbnail: data.thumbnail || null,
   })
-
 }

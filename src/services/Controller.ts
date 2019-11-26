@@ -53,13 +53,15 @@ export default class Controller {
       .then(this.useMiddleware('delete'))
       .then(this.responseMessage(res, 'Deleted is success'))
   }
-  
-    public get middlewares(): any[] {
-      return []
-    }
+
+  public get middlewares(): any[] {
+    return []
+  }
 
   private useMiddleware(action: string) {
-    const middleware = this.middlewares.find((item: { action:string }) => item.action === action)
+    const middleware = this.middlewares.find(
+      (item: { action: string }) => item.action === action
+    )
     return (response: any) => {
       if (middleware) return middleware.parser(response)
       return response
