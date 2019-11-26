@@ -19,7 +19,8 @@ export default class Controller {
   public async index(req: Request, res: Response) {
     return this.Model.all()
       .then(this.useMiddleware('index'))
-      .then((result: object) => res.json(result))
+      .then(this.responseDefault(res))
+      .catch(this.responseNotFound(res))
   }
 
   public async show(req: Request, res: Response) {
@@ -52,6 +53,7 @@ export default class Controller {
     return this.Model.delete(id)
       .then(this.useMiddleware('delete'))
       .then(this.responseMessage(res, 'Deleted is success'))
+      .catch(this.responseNotValid(res))
   }
 
   public get middlewares(): any[] {
