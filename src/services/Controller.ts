@@ -1,44 +1,69 @@
-import { Request, Response } from 'express'
+import { Request, Response, NextFunction } from 'express'
 
 export default class Controller {
   private Model: any
 
   constructor(Model: any) {
     this.Model = Model
+    this.index = this.index.bind(this)
+    this.show = this.show.bind(this)
+    this.update = this.update.bind(this)
+    this.create = this.create.bind(this)
+    this.delete = this.delete.bind(this)
   }
 
   public static get permits() {
     return ['index', 'show', 'update', 'create', 'delete']
   }
 
-  public index = async (req: Request, res: Response) => {
-    const response = await this.Model.all()
-    return res.json(response)
+  public async index(req: Request, res: Response) {
+    return this.Model.all()
+      .then(this.useMiddleware('index'))
+      .then((result: object) => res.json(result))
   }
 
-  public show = async (req: Request, res: Response) => {
+  public async show(req: Request, res: Response) {
     const id = req.params.id
     return this.Model.find(id)
+      .then(this.useMiddleware('show'))
       .then((result: object) => res.json(result))
       .catch(() => this.responseNotFound(res))
   }
 
-  public update = async (req: Request, res: Response) => {
+  public async update(req: Request, res: Response) {
     const id = req.params.id
     const data = req.body
-    return this.Model.update(id, data).then((result: object) => res.json(result)).catch(this.responseNotValid(res))
+    return this.Model.update(id, data)
+      .then(this.useMiddleware('update'))
+      .then((result: object) => res.json(result))
+      .catch(this.responseNotValid(res))
   }
 
-  public create = async (req: Request, res: Response) => {
+  public async create(req: Request, res: Response) {
     const data = req.body
-    return await this.Model.create(data).then((result: object) => res.json(result)).catch(this.responseNotValid(res))
+    return await this.Model.create(data)
+      .then(this.useMiddleware('create'))
+      .then((result: object) => res.json(result))
+      .catch(this.responseNotValid(res))
   }
 
-  public delete = async (req: Request, res: Response) => {
+  public async delete(req: Request, res: Response) {
     const id = req.params.id
-    return this.Model.delete(id).then(() =>
-      res.json({ message: 'Deleted is success' })
-    )
+    return this.Model.delete(id)
+      .then(this.useMiddleware('delete'))
+      .then(() => res.json({ message: 'Deleted is success' }))
+  }
+  
+    public get middlewares(): any[] {
+      return []
+    }
+
+  private useMiddleware(action: string) {
+    const middleware = this.middlewares.find((item: { action:string }) => item.action === action)
+    return (response: any) => {
+      if (middleware) return middleware.parser(response)
+      return response
+    }
   }
 
   private responseNotFound(res: Response) {
