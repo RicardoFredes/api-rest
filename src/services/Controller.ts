@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express'
+import { Request, Response } from 'express'
 
 export default class Controller {
   private Model: any
@@ -26,8 +26,8 @@ export default class Controller {
     const id = req.params.id
     return this.Model.find(id)
       .then(this.useMiddleware('show'))
-      .then((result: object) => res.json(result))
-      .catch(() => this.responseNotFound(res))
+      .then(this.responseSuccess(res))
+      .catch(this.responseNotFound(res))
   }
 
   public async update(req: Request, res: Response) {
@@ -35,7 +35,7 @@ export default class Controller {
     const data = req.body
     return this.Model.update(id, data)
       .then(this.useMiddleware('update'))
-      .then((result: object) => res.json(result))
+      .then(this.responseSuccess(res))
       .catch(this.responseNotValid(res))
   }
 
@@ -43,7 +43,7 @@ export default class Controller {
     const data = req.body
     return await this.Model.create(data)
       .then(this.useMiddleware('create'))
-      .then((result: object) => res.json(result))
+      .then(this.responseSuccess(res))
       .catch(this.responseNotValid(res))
   }
 
@@ -51,7 +51,7 @@ export default class Controller {
     const id = req.params.id
     return this.Model.delete(id)
       .then(this.useMiddleware('delete'))
-      .then(() => res.json({ message: 'Deleted is success' }))
+      .then(this.responseMessage(res, 'Deleted is success'))
   }
   
     public get middlewares(): any[] {
@@ -66,9 +66,19 @@ export default class Controller {
     }
   }
 
+  private responseSuccess(res: Response) {
+    return (result: any) => res.json(result)
+  }
+
+  private responseMessage(res: Response, message: string) {
+    return () => res.json({ message })
+  }
+
   private responseNotFound(res: Response) {
-    res.status(404)
-    return res.json({ message: 'Not Found ' })
+    return () => {
+      res.status(404)
+      return res.json({ message: 'Not Found ' })
+    }
   }
 
   private responseNotValid(res: Response) {
