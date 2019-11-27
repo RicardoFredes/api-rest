@@ -23,7 +23,9 @@ export default class Users extends Model {
   }
 
   public static async login(email: string, password: string): Promise<any> {
-    return this.db.where({email}).first()
+    return this.db
+      .where({ email })
+      .first()
       .then(user => {
         if (!user) {
           return Promise.reject({ error: 'Not found', statusCode: 404 })
