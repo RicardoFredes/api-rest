@@ -32,12 +32,7 @@ export default class Users extends Model {
       })
       .then(async (user: any) => {
         const match = await bcrypt.compare(password, user.password)
-        if (!match) {
-          return Promise.reject({
-            error: 'Not match password',
-            statusCode: 422,
-          })
-        }
+        if (!match) return Promise.reject()
         return this.find(user.id)
       })
   }
