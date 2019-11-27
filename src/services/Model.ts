@@ -18,7 +18,10 @@ export default class Model extends ObjectionModel {
   }
 
   public static async findOne(query: object): Promise<any> {
-    return this.db.where(query).first().columns(this.only)
+    return this.db
+      .where(query)
+      .first()
+      .columns(this.only)
   }
 
   public static async create(data: object): Promise<any> {

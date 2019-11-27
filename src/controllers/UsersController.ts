@@ -14,8 +14,8 @@ export default class UsersController extends Controller {
   public async email(req: Request, res: Response) {
     const email = req.body.email
     if (!email) {
-      res.status(422)
-      return res.json({ error: 'Email is required' })
+      res.status(401)
+      return res.json({ error: 'Invalid credentials' })
     }
     return this.Model.findOne({ email })
       .then(this.responseDefault(res))
